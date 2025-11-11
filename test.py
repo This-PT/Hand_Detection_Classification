@@ -3,8 +3,26 @@ from cvzone.HandTrackingModule import HandDetector
 from cvzone.ClassificationModule import Classifier
 import numpy as np
 import math
+import json
 import os
 import tensorflow
+import paho.mqtt.client as mqtt
+broker = "mqtt-dashboard.com"
+topic = "node/data/group99"
+sent_to = "group99/u2"
+client = mqtt.Client("Python_Client_1")
+
+def on_connect(client, userdata, flags, rc):
+    print("✅ Connected to MQTT broker with code:", rc)
+
+def on_message(client, userdata, msg):
+    print(f"📩 Received message: {msg.payload.decode()} from topic: {msg.topic}")
+    
+client.on_connect = on_connect
+client.on_message = on_message
+
+client.connect(broker, 1883)
+client.loop_start()
 
 wCam,hCam = 720,560
 cap = cv2.VideoCapture(0)
@@ -19,7 +37,7 @@ folder = "Data/2"
 os.makedirs(folder, exist_ok=True)
 offset = 20
 imgSize = 300
-
+last_idx = -1
 
 while True:
     _,img = cap.read()
@@ -44,7 +62,7 @@ while True:
     
         
         aspectRatio = h/w
-        
+        idx = -1
         if aspectRatio > 1:
             k = imgSize/h
             wCal = math.ceil(k*w)
@@ -54,7 +72,7 @@ while True:
             # if(imgResizeShape[0]>imgSize or imgResizeShape[1]+wGap > imgSize):
             #     continue
             imgWhite[:,wGap:wGap+imgResizeShape[1]] = imgResize
-            prediction , idx =  classifier.getPrediction(img)
+            prediction , idx =  classifier.getPrediction(imgWhite)
             print(prediction,idx)
         else :
             k = imgSize/w
@@ -65,12 +83,18 @@ while True:
             # if(imgResizeShape[0]>imgSize or imgResizeShape[1]+hGap > imgSize):
             #     continue
             imgWhite[hGap:hCal+hGap,:] = imgResize
-            prediction , idx =  classifier.getPrediction(img)
+            prediction , idx =  classifier.getPrediction(imgWhite)
             print(prediction,idx)
-            
+        if(idx != last_idx):
+            client.publish(sent_to, str(int(idx)))
+            last_idx = idx
+        
         cv2.imshow("crop",imgCrop)  
         cv2.imshow("img White",imgWhite)
-    
+    else :
+        if last_idx != 3:
+            client.publish(sent_to, str(3))
+            last_idx = 3
     
     cv2.imshow("img",img)
     key = cv2.waitKey(10)
