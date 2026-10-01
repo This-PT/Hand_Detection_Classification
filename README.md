@@ -28,8 +28,8 @@ data_colection.py uses the same crop-and-pad step. Press s to save a 300×300 im
 
 Run it
 ```bash
-pip install -r requirements.txt cvzone paho-mqtt`
-python test.py`        # needs a webcam
+pip install -r requirements.txt cvzone paho-mqtt
+python test.py       
 ```
 Then flash clock/clock.ino to an ESP32 (set your WiFi name and password first).
 
