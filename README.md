@@ -24,7 +24,7 @@ When the button (pin 12) is pressed: gesture 0 adds 10 minutes to the alarm and 
 Turns pin 17 on when the alarm time is reached.
 Collecting training data
 
-data_colection.py uses the same crop-and-pad step. Press s to save a 300×300 image into Data/<class>/, and q to quit. The model in Model/ was trained on images. 
+data_colection.py uses the same crop-and-pad step. Press s to save a 300×300 image into Data , and q to quit. The model in `Model/` was trained on images. 
 
 Run it
 bash
