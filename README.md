@@ -4,11 +4,11 @@ Set an alarm clock with hand gestures. A webcam recognizes a hand sign, and an E
 
 
 How it works
-Webcam ─▶ hand detection (cvzone / MediaPipe)
-       ─▶ crop + resize hand to 300×300 on a white square
-       ─▶ Keras classifier (2 gestures)
-       ─▶ publish gesture id over MQTT
-       ─▶ ESP32 receives it ─▶ updates alarm time ─▶ buzzer / LED on pin 17
+Webcam ─> hand detection (cvzone / MediaPipe)
+       ─> crop + resize hand to 300×300 on a white square
+       ─> Keras classifier (2 gestures)
+       ─> publish gesture id over MQTT
+       ─> ESP32 receives it ─> updates alarm time ─> buzzer / LED on pin 17
 
 Python side (test.py)
 
